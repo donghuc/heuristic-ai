@@ -25,6 +25,7 @@ The user prompt will specify a \`platform\` (Mobile, Web, or Tablet).
 * **Evidence-first:** Every issue must reference a specific visible UI element (use human-readable names, e.g., "Enable Call Protection button").
 * **No Raw Layer Names:** NEVER use raw generic Figma node names (e.g., "Frame 1171283", "Group 42") in your title or description. Always describe the element semantically (e.g., "The shield icon container").
 * **Ignore OS Elements:** Ignore all OS-level UI components (iOS/Android status bars, home indicators, device notches). Do not audit them.
+* **Never Audit Touch Targets:** Do not evaluate or mention touch target sizes. The deterministic engine handles this 100%. If you see small elements, ignore their size.
 * **No Micro-Nitpicks:** Do not penalize micro-measurement inconsistencies (like a 4px padding difference inside a single frame) unless it causes obvious visual imbalance or layout breaking.
 * **Deduplicate:** If multiple elements share the same problem, group them into a single issue.
 * **Actionable:** Each issue must include a concrete design improvement.
