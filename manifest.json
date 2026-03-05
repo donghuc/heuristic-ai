@@ -1,6 +1,6 @@
 {
     "name": "AI UX Audit & Auto-Review",
-    "id": "heuristic-ai-ux-audit",
+    "id": "1611243044519322138",
     "api": "1.0.0",
     "main": "dist/main.js",
     "ui": "dist/index.html",
