@@ -32,6 +32,10 @@ export const missingStatesRule: AuditRule = {
     severity: 'info',
     run(nodes): RuleResult {
         const formNodes = nodes.filter(n => {
+            if (n.type !== 'INSTANCE' && n.type !== 'COMPONENT' && n.type !== 'FRAME') return false;
+            // Prevent false positives on generic layout blocks
+            if (n.width < 100 || n.height < 30 || n.height > 100) return false;
+
             const nameLower = n.name.toLowerCase();
             return FORM_KEYWORDS.some(kw => nameLower.includes(kw));
         });

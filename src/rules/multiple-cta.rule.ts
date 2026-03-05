@@ -30,8 +30,8 @@ function isCTACandidate(node: ExtractedNode): boolean {
 export const multipleCTARule: AuditRule = {
     id: 'MULTIPLE_PRIMARY_CTA',
     name: 'Multiple Primary CTAs',
-    description: 'A screen should have at most one primary call-to-action to avoid decision paralysis.',
-    severity: 'warning',
+    description: 'A screen should ideally have one primary call-to-action to avoid decision paralysis. Note: this may flag buttons inside modals.',
+    severity: 'info',
     run(nodes): RuleResult {
         const ctaCandidates = nodes.filter(isCTACandidate);
 
@@ -55,7 +55,7 @@ export const multipleCTARule: AuditRule = {
         return {
             ruleId: 'MULTIPLE_PRIMARY_CTA',
             ruleName: 'Multiple Primary CTAs',
-            severity: 'warning',
+            severity: 'info',
             passed: false,
             issues,
             summary: `${ctaCandidates.length} potential primary CTAs detected — consider promoting only one.`,
