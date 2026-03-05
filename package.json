@@ -1,0 +1,35 @@
+{
+  "name": "heuristic-ai",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Automated UX Audit for Figma powered by AI",
+  "scripts": {
+    "build:main": "vite build --config vite.config.main.ts",
+    "build:ui": "vite build --config vite.config.ts",
+    "build": "npm run build:main && npm run build:ui",
+    "dev": "concurrently \"vite build --config vite.config.main.ts --watch\" \"vite build --config vite.config.ts --watch\"",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.main.json"
+  },
+  "dependencies": {
+    "file-saver": "^2.0.5",
+    "marked": "^12.0.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@figma/plugin-typings": "^1.95.0",
+    "@tailwindcss/postcss": "^4.2.1",
+    "@types/file-saver": "^2.0.7",
+    "@types/node": "^25.3.3",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "autoprefixer": "^10.4.27",
+    "concurrently": "^9.2.1",
+    "postcss": "^8.5.8",
+    "tailwindcss": "^4.2.1",
+    "typescript": "^5.4.5",
+    "vite": "^5.3.4",
+    "vite-plugin-singlefile": "^2.0.2"
+  }
+}

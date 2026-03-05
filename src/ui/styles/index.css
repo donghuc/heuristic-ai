@@ -1,0 +1,164 @@
+@import "tailwindcss";
+
+/* ── Design tokens ─────────────────────────────────────────────
+   Tailwind v4 uses @theme instead of tailwind.config.js colors.
+   All figma.* and severity.* tokens are declared here.
+──────────────────────────────────────────────────────────────── */
+@theme {
+    /* Font */
+    --font-sans: 'Inter', system-ui, sans-serif;
+
+    /* Figma dark theme palette */
+    --color-figma-bg: #2C2C2C;
+    --color-figma-bgSecondary: #1E1E1E;
+    --color-figma-bgTertiary: #383838;
+    --color-figma-hover: #383838;
+    --color-figma-border: #444444;
+    --color-figma-text: #FFFFFF;
+    --color-figma-textMuted: #B3B3B3;
+    --color-figma-textDisabled: #666666;
+    --color-figma-blue: #18A0FB;
+    --color-figma-blueHover: #007BE5;
+    --color-figma-critical: #F24822;
+    --color-figma-warning: #FFCD29;
+    --color-figma-success: #1BC47D;
+
+    /* Semantic severity colors */
+    --color-severity-critical: #EF4444;
+    --color-severity-high: #F97316;
+    --color-severity-medium: #EAB308;
+    --color-severity-low: #71717A;
+
+    /* Font size scale — 3 sizes only */
+    --text-label: 11px;
+    --text-body: 13px;
+    --text-heading: 15px;
+}
+
+/* ── Base ──────────────────────────────────────────────────────── */
+@layer base {
+
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
+
+    body {
+        background-color: #2C2C2C;
+        color: #FFFFFF;
+        font-family: var(--font-sans);
+        font-size: 13px;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+}
+
+/* ── Scrollbar ─────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #444444;
+    border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: #B3B3B3;
+}
+
+/* ── Reusable component classes ────────────────────────────────── */
+@layer utilities {
+
+    .figma-input {
+        width: 100%;
+        background-color: #1E1E1E;
+        border: 1px solid #444444;
+        border-radius: 6px;
+        color: #FFFFFF;
+        font-size: 13px;
+        font-family: var(--font-sans);
+        padding: 0 12px;
+        height: 32px;
+        outline: none;
+        transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .figma-input::placeholder {
+        color: #B3B3B3;
+    }
+
+    .figma-input:focus {
+        border-color: #18A0FB;
+        box-shadow: 0 0 0 3px rgba(24, 160, 251, 0.2);
+    }
+
+    .audit-card {
+        background-color: #2C2C2C;
+        border: 1px solid #444444;
+        border-radius: 6px;
+        overflow: hidden;
+        transition: border-color 0.15s;
+        cursor: pointer;
+    }
+
+    .audit-card:hover {
+        border-color: rgba(24, 160, 251, 0.4);
+    }
+
+    .section-header {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 0;
+        text-align: left;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        color: #B3B3B3;
+        border-bottom: 1px solid #444444;
+        background: none;
+        cursor: pointer;
+        transition: color 0.1s;
+    }
+
+    .section-header:hover {
+        color: #FFFFFF;
+    }
+
+    .fix-block {
+        margin-top: 8px;
+        border-radius: 6px;
+        padding: 8px 12px;
+        font-size: 11px;
+        color: #B3B3B3;
+        line-height: 1.5;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid #444444;
+    }
+
+    /* Severity border-left accent colors */
+    .severity-critical {
+        border-left-color: #EF4444;
+    }
+
+    .severity-high {
+        border-left-color: #F97316;
+    }
+
+    .severity-medium {
+        border-left-color: #EAB308;
+    }
+
+    .severity-low {
+        border-left-color: #71717A;
+    }
+}

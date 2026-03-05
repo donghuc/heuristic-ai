@@ -1,0 +1,24 @@
+{
+    "name": "AI UX Audit & Auto-Review",
+    "id": "heuristic-ai-ux-audit",
+    "api": "1.0.0",
+    "main": "dist/main.js",
+    "ui": "dist/index.html",
+    "networkAccess": {
+        "allowedDomains": [
+            "https://api.openai.com",
+            "https://api.anthropic.com",
+            "https://app.posthog.com",
+            "https://us.i.posthog.com",
+            "https://eu.i.posthog.com"
+        ],
+        "reasoning": "Plugin sends extracted frame data to OpenAI or Anthropic for UX audit analysis. Anonymous usage events are sent to PostHog. No user design data is stored or transmitted."
+    },
+    "permissions": [
+        "currentuser"
+    ],
+    "editorType": [
+        "figma"
+    ],
+    "documentAccess": "dynamic-page"
+}
