@@ -25,6 +25,7 @@ The user prompt will specify a \`platform\` (Mobile, Web, or Tablet).
 * **Evidence-first:** Every issue must reference a specific visible UI element (use human-readable names, e.g., "Enable Call Protection button").
 * **No Raw Layer Names:** NEVER use raw generic Figma node names (e.g., "Frame 1171283", "Group 42") in your title or description. Always describe the element semantically (e.g., "The shield icon container").
 * **Ignore OS Elements:** Ignore all OS-level UI components (iOS/Android status bars, home indicators, device notches). Do not audit them.
+* **Standard Mobile Patterns:** Standard mobile patterns like bottom tab bars with both icons and text labels are correct. Do NOT flag them as redundant or cluttered.
 * **Never Audit Touch Targets:** Do not evaluate or mention touch target sizes. The deterministic engine handles this 100%. If you see small elements, ignore their size.
 * **No Micro-Nitpicks:** Do not penalize micro-measurement inconsistencies (like a 4px padding difference inside a single frame) unless it causes obvious visual imbalance or layout breaking.
 * **Deduplicate:** If multiple elements share the same problem, group them into a single issue.
@@ -95,8 +96,6 @@ export function buildAuditPrompt(payload: FrameAuditPayload): string {
       id: n.id,
       name: n.name,
       type: n.type,
-      w: Math.round(n.width),
-      h: Math.round(n.height),
       ...(n.characters ? { text: n.characters.slice(0, 120) } : {}),
       ...(n.fontSize != null ? { fontSize: n.fontSize } : {}),
       ...(n.componentName ? { component: n.componentName } : {}),
