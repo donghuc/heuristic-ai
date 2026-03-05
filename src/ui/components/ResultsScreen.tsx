@@ -58,10 +58,30 @@ export function ResultsScreen({ report, onFocusNode, onNewAudit }: Props) {
                     "{report.summary}"
                 </p>
 
-                <CategoryList category="Accessibility" issues={groupedIssues.Accessibility} onFocusNode={onFocusNode} />
-                <CategoryList category="Heuristics" issues={groupedIssues.Heuristics} onFocusNode={onFocusNode} />
-                <CategoryList category="Copy & Clarity" issues={groupedIssues.Copy} onFocusNode={onFocusNode} />
-                <CategoryList category="Visual Hierarchy" issues={groupedIssues.Hierarchy} onFocusNode={onFocusNode} />
+                <CategoryList
+                    category="Accessibility"
+                    issues={groupedIssues.Accessibility}
+                    onFocusNode={onFocusNode}
+                    isInitiallyOpen={groupedIssues.Accessibility.length > 0}
+                />
+                <CategoryList
+                    category="Heuristics"
+                    issues={groupedIssues.Heuristics}
+                    onFocusNode={onFocusNode}
+                    isInitiallyOpen={groupedIssues.Accessibility.length === 0 && groupedIssues.Heuristics.length > 0}
+                />
+                <CategoryList
+                    category="Copy & Clarity"
+                    issues={groupedIssues.Copy}
+                    onFocusNode={onFocusNode}
+                    isInitiallyOpen={groupedIssues.Accessibility.length === 0 && groupedIssues.Heuristics.length === 0 && groupedIssues.Copy.length > 0}
+                />
+                <CategoryList
+                    category="Visual Hierarchy"
+                    issues={groupedIssues.Hierarchy}
+                    onFocusNode={onFocusNode}
+                    isInitiallyOpen={groupedIssues.Accessibility.length === 0 && groupedIssues.Heuristics.length === 0 && groupedIssues.Copy.length === 0 && groupedIssues.Hierarchy.length > 0}
+                />
 
                 {report.issues.length === 0 && (
                     <div className="text-center py-8 text-figma-textMuted text-xs">

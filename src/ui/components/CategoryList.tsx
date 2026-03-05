@@ -6,6 +6,7 @@ interface Props {
     category: string;
     issues: AuditIssue[];
     onFocusNode: (nodeId: string) => void;
+    isInitiallyOpen?: boolean;
 }
 
 const CATEGORY_ICONS: Record<string, React.ReactNode> = {
@@ -41,8 +42,8 @@ const CATEGORY_ICONS: Record<string, React.ReactNode> = {
     ),
 };
 
-export function CategoryList({ category, issues, onFocusNode }: Props) {
-    const [isOpen, setIsOpen] = useState(true);
+export function CategoryList({ category, issues, onFocusNode, isInitiallyOpen = false }: Props) {
+    const [isOpen, setIsOpen] = useState(isInitiallyOpen);
 
     if (issues.length === 0) return null;
 
