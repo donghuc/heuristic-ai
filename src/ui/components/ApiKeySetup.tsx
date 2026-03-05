@@ -101,10 +101,10 @@ export function ApiKeySetup({ onSave, onCancel }: Props) {
                     </select>
                 </div>
 
-                {/* Helper link — founder should replace YOUR_GUIDE_URL before launch */}
+                {/* Helper link */}
                 <button
                     type="button"
-                    onClick={() => window.open('YOUR_GUIDE_URL', '_blank')}
+                    onClick={() => window.open('https://donghuc.github.io/heuristic-ai/api-key-guide', '_blank')}
                     className="text-[11px] text-figma-textMuted hover:underline text-left w-fit"
                 >
                     How do I get an API key? →
