@@ -251,7 +251,7 @@ figma.ui.onmessage = async (raw: unknown) => {
                             id: `det-${Math.random().toString(36).substring(2, 9)}`,
                             nodeId: i.nodeId,
                             category: 'Accessibility',
-                            severity: r.severity === 'critical' ? 'Critical' : r.severity === 'warning' ? 'High' : 'Low',
+                            severity: i.severity || (r.severity === 'critical' ? 'Critical' : r.severity === 'warning' ? 'High' : 'Low'),
                             title: r.ruleName,
                             description: i.detail,
                             recommendation: r.ruleId === 'TOUCH_TARGET_SIZE'

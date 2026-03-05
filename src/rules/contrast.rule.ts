@@ -56,6 +56,32 @@ function findBackground(textNode: ExtractedNode, nodes: ExtractedNode[]): Normal
     return containers[0]?.fills?.[0] ?? null;
 }
 
+// ── Context awareness for smart severities ─────────
+function getIssueSeverity(textNode: ExtractedNode, nodes: ExtractedNode[]): 'Critical' | 'High' | 'Low' {
+    const tx = textNode.x;
+    const ty = textNode.y;
+
+    const containers = nodes.filter(n =>
+        n.id !== textNode.id &&
+        n.x <= tx && n.y <= ty &&
+        n.x + n.width >= tx + textNode.width &&
+        n.y + n.height >= ty + textNode.height
+    );
+
+    const allNames = [textNode.name, ...containers.map(c => c.name)].join(' ').toLowerCase();
+
+    if (allNames.includes('disable') || allNames.includes('inactive')) return 'Low';
+
+    const isInteractive = allNames.includes('button') ||
+        allNames.includes('btn') ||
+        allNames.includes('cta') ||
+        allNames.includes('input') ||
+        allNames.includes('tab') ||
+        containers.some(c => c.type === 'COMPONENT' || c.type === 'INSTANCE');
+
+    return isInteractive ? 'Critical' : 'High';
+}
+
 export const contrastRule: AuditRule = {
     id: 'CONTRAST_RATIO',
     name: 'WCAG 2.1 AA Contrast',
@@ -91,6 +117,7 @@ export const contrastRule: AuditRule = {
                     detail: `Contrast ${ratio.toFixed(2)}:1 — below ${threshold}:1 threshold for ${isLargeText(node) ? 'large' : 'normal'} text`,
                     value: parseFloat(ratio.toFixed(2)),
                     threshold,
+                    severity: getIssueSeverity(node, nodes),
                 });
             }
         }

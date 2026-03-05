@@ -54,6 +54,7 @@ export interface RuleIssue {
     detail: string;
     value?: number | string;
     threshold?: number | string;
+    severity?: 'Critical' | 'High' | 'Medium' | 'Low';
 }
 
 export interface RuleResult {
