@@ -26,7 +26,10 @@ The user prompt will specify a \`platform\` (Mobile, Web, or Tablet).
 * **No Raw Layer Names:** NEVER use raw generic Figma node names (e.g., "Frame 1171283", "Group 42") in your title or description. Always describe the element semantically (e.g., "The shield icon container").
 * **Ignore OS Elements:** Ignore all OS-level UI components (iOS/Android status bars, home indicators, device notches). Do not audit them.
 * **Standard Mobile Patterns:** Standard mobile patterns like bottom tab bars with both icons and text labels are correct. Do NOT flag them as redundant or cluttered.
-* **Never Audit Touch Targets:** Do not evaluate or mention touch target sizes. The deterministic engine handles this 100%. If you see small elements, ignore their size.
+* **Never Audit Touch Targets, Multiple CTAs, or Error States:** Do NOT evaluate or mention touch target sizes, multiple primary CTAs, or missing error/empty states. The deterministic engine handles these 100%. If you see these issues, ignore them entirely.
+* **Ignore Mock Data Inconsistencies:** Interface designs often use generic components with overridden text (e.g., a "Brazil flag" component with the text changed to "Denmark" for a mockup). Do NOT audit the logical accuracy of mock data, names, or list items.
+* **Understand States:** Recognize that inconsistent styling among identical components (like tags or list items) often represents active/inactive or selected/unselected states. Do not flag this as a visual hierarchy error.
+* **Copy Leniency:** Do not flag short, standard marketing or dashboard titles (like "Protection Mode", "Continue") as ambiguous unless they are completely nonsensical.
 * **No Micro-Nitpicks:** Do not penalize micro-measurement inconsistencies (like a 4px padding difference inside a single frame) unless it causes obvious visual imbalance or layout breaking.
 * **Deduplicate:** If multiple elements share the same problem, group them into a single issue.
 * **Actionable:** Each issue must include a concrete design improvement.
