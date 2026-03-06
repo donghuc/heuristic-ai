@@ -82,6 +82,51 @@ function getIssueSeverity(textNode: ExtractedNode, nodes: ExtractedNode[]): 'Cri
     return isInteractive ? 'Critical' : 'High';
 }
 
+function relativeLuminanceFromHex(hex: string): number {
+    const r = parseInt(hex.slice(1, 3), 16) / 255;
+    const g = parseInt(hex.slice(3, 5), 16) / 255;
+    const b = parseInt(hex.slice(5, 7), 16) / 255;
+    return relativeLuminance(r, g, b);
+}
+
+function hexToRgb(hex: string) {
+    return {
+        r: parseInt(hex.slice(1, 3), 16) / 255,
+        g: parseInt(hex.slice(3, 5), 16) / 255,
+        b: parseInt(hex.slice(5, 7), 16) / 255,
+    };
+}
+
+function rgbToHex(r: number, g: number, b: number): string {
+    const toHex = (c: number) => Math.round(c * 255).toString(16).padStart(2, '0');
+    return `#${toHex(r)}${toHex(g)}${toHex(b)}`.toUpperCase();
+}
+
+/**
+ * Mathematically finds the nearest color that passes the threshold.
+ */
+function calculatePassingColor(fg: NormalizedFill, bg: NormalizedFill, threshold: number): string {
+    const bgL = relativeLuminance(bg.r, bg.g, bg.b);
+    let currR = fg.r;
+    let currG = fg.g;
+    let currB = fg.b;
+
+    // Direction: darken if background is light, lighten if background is dark
+    const step = bgL > 0.5 ? -0.05 : 0.05;
+
+    // Safety loop to prevent infinite hangs (max 20 iterations)
+    for (let i = 0; i < 20; i++) {
+        const ratio = contrastRatio({ type: 'SOLID', r: currR, g: currG, b: currB, opacity: 1, hex: '' }, bg);
+        if (ratio >= threshold + 0.1) break; // Buffer for safety
+
+        currR = Math.max(0, Math.min(1, currR + step));
+        currG = Math.max(0, Math.min(1, currG + step));
+        currB = Math.max(0, Math.min(1, currB + step));
+    }
+
+    return rgbToHex(currR, currG, currB);
+}
+
 export const contrastRule: AuditRule = {
     id: 'CONTRAST_RATIO',
     name: 'WCAG 2.1 AA Contrast',
@@ -97,9 +142,8 @@ export const contrastRule: AuditRule = {
         for (const node of textNodes) {
             const textFill = node.fills![0];
             const bgFill = findBackground(node, nodes);
-            if (!bgFill) continue; // Can't determine — skip rather than false-positive
+            if (!bgFill) continue;
 
-            // Blend text opacity into effective color for contrast calc
             const effectiveFg: NormalizedFill = {
                 ...textFill,
                 r: textFill.r * textFill.opacity + bgFill.r * (1 - textFill.opacity),
@@ -111,14 +155,37 @@ export const contrastRule: AuditRule = {
             const threshold = isLargeText(node) ? 3.0 : 4.5;
 
             if (ratio < threshold) {
-                issues.push({
+                const passingHex = calculatePassingColor(textFill, bgFill, threshold);
+                const isComponentPart = node.isInsideInstance || node.type === 'INSTANCE' || node.type === 'COMPONENT';
+                const hasToken = !!node.fillStyleId || node.hasVariables;
+
+                const defaultDetail = `Contrast ${ratio.toFixed(2)}:1 — below ${threshold}:1 threshold for ${isLargeText(node) ? 'large' : 'normal'} text`;
+
+                let tailoredDetail = defaultDetail;
+                if (isComponentPart) {
+                    tailoredDetail += '. This element is part of a Component. Please review the Main Component in your Design System to fix this issue globally.';
+                } else if (hasToken) {
+                    tailoredDetail += '. This element is bound to a Design System Token or Style. Please update the token value to fix this safely.';
+                }
+
+                const issue: import('../shared/types').RuleIssue = {
                     nodeId: node.id,
                     nodeName: node.name,
-                    detail: `Contrast ${ratio.toFixed(2)}:1 — below ${threshold}:1 threshold for ${isLargeText(node) ? 'large' : 'normal'} text`,
+                    detail: tailoredDetail,
                     value: parseFloat(ratio.toFixed(2)),
                     threshold,
                     severity: getIssueSeverity(node, nodes),
-                });
+                };
+
+                if (!isComponentPart && !hasToken) {
+                    issue.autoFix = {
+                        type: 'CONTRAST' as const,
+                        nodeId: node.id,
+                        payload: { hex: passingHex }
+                    };
+                }
+
+                issues.push(issue);
             }
         }
 

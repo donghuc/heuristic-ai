@@ -29,13 +29,37 @@ export const touchTargetRule: AuditRule = {
         const candidates = nodes.filter(isInteractiveNode);
         const issues = candidates
             .filter(n => n.width < MIN_SIZE || n.height < MIN_SIZE)
-            .map(n => ({
-                nodeId: n.id,
-                nodeName: n.name,
-                detail: `${n.width}×${n.height}px — below the ${MIN_SIZE}×${MIN_SIZE}px minimum`,
-                value: `${n.width}×${n.height}px`,
-                threshold: `${MIN_SIZE}×${MIN_SIZE}px`,
-            }));
+            .map(n => {
+                const isComponentPart = n.isInsideInstance || n.type === 'INSTANCE' || n.type === 'COMPONENT';
+                const hasToken = n.hasVariables;
+
+                const defaultDetail = `${n.width}×${n.height}px — below the ${MIN_SIZE}×${MIN_SIZE}px minimum`;
+                let tailoredDetail = defaultDetail;
+
+                if (isComponentPart) {
+                    tailoredDetail += '. This element is part of a Component. Please review the Main Component in your Design System to fix this issue globally.';
+                } else if (hasToken) {
+                    tailoredDetail += '. This element is bound to Design System variables (e.g. padding/sizing tokens). Please update the token value to fix this safely.';
+                }
+
+                const issue: any = {
+                    nodeId: n.id,
+                    nodeName: n.name,
+                    detail: tailoredDetail,
+                    value: `${n.width}×${n.height}px`,
+                    threshold: `${MIN_SIZE}×${MIN_SIZE}px`,
+                };
+
+                if (!isComponentPart && !hasToken) {
+                    issue.autoFix = {
+                        type: 'TOUCH_TARGET' as const,
+                        nodeId: n.id,
+                        payload: { width: MIN_SIZE, height: MIN_SIZE }
+                    };
+                }
+
+                return issue;
+            });
 
         return {
             ruleId: 'TOUCH_TARGET_SIZE',
